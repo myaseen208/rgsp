@@ -20,7 +20,7 @@ Imports:
   magrittr,
   tibble
 License: GPL-2
-URL: https://github.com/myaseen208/rgsp
+URL: https://github.com/myaseen208/rgsp, https://myaseen208.github.io/rgsp/
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0
