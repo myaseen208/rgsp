@@ -41,7 +41,7 @@
 #'     .p1     = 0.0010
 #'   , .p2     = 0.0020
 #'   , .alpha  = 0.0500
-#'   , .beta   = 0.9500
+#'   , .beta   = 0.0500
 #'   , .nums   = 10000
 #'   , .rep    = 10 # 1000
 #' )
@@ -79,8 +79,8 @@ rgsp_sym <- function(.p1, .p2, .alpha, .beta, .nums, .rep){
 
 rgsp_sym.default <- function(.p1, .p2, .alpha, .beta, .nums, .rep){
 
-  zpu1 <- qnorm(p = .p1, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
-  zpl1 <- qnorm(p = .p2, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
+  zpu1 <- qnorm(p = .p1/2, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
+  zpl1 <- qnorm(p = .p2/2, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
   C1   <- zpu1/3
   C2   <- zpl1/3
   zp1  <- qnorm(p = .p1/2, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
