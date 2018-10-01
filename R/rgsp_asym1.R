@@ -1,7 +1,7 @@
-#' @name    rgsp_sym
-#' @aliases rgsp_sym
-#' @title Repetitive Group Sampling Plan Based on Cpk under Symmetric Case
-#' @description Calculates Sample Number and Average Sample Number for Repetitive Group Sampling Plan based on Cpk under symmetric case as given in Aslam et al. (2013)
+#' @name    rgsp_asym1
+#' @aliases rgsp_asym1
+#' @title Repetitive Group Sampling Plan Based on Cpk under asymmetric Case 1
+#' @description Calculates Sample Number and Average Sample Number for Repetitive Group Sampling Plan based on Cpk under asymmetric case 1 as given in Aslam et al. (2013)
 #'
 #' @param .p1    Acceptable Quality Level (AQL) Probability
 #' @param .p2    Limiting Quality Level (LQL) Probability
@@ -37,16 +37,17 @@
 #'
 #' @examples
 #'
-#' rgsp_sym(
-#'     .p1     = 0.0010
-#'   , .p2     = 0.0020
-#'   , .alpha  = 0.0500
-#'   , .beta   = 0.0500
+#' rgsp_asym1(
+#'     .p1     = 0.01
+#'   , .p2     = 0.04
+#'   , .alpha  = 0.05
+#'   , .beta   = 0.10
 #'   , .nums   = 10000
 #'   , .rep    = 10 # 1000
 #' )
 #'
 #'
+
 if(getRversion() >= "2.15.1"){
   utils::globalVariables(
     c(
@@ -70,22 +71,23 @@ if(getRversion() >= "2.15.1"){
   )
 }
 
-rgsp_sym <- function(.p1, .p2, .alpha, .beta, .nums, .rep){
-  UseMethod("rgsp_sym")
+rgsp_asym1 <- function(.p1, .p2, .alpha, .beta, .nums, .rep){
+  UseMethod("rgsp_asym1")
 }
 
 #' @export
-#' @rdname rgsp_sym
+#' @rdname rgsp_asym1
 
-rgsp_sym.default <- function(.p1, .p2, .alpha, .beta, .nums, .rep){
+rgsp_asym1.default <- function(.p1, .p2, .alpha, .beta, .nums, .rep){
+  zpu1  <- qnorm(p =   .p1/4, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
+  zpl1  <- qnorm(p = 3*.p1/4, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
+  C1    <- zpu1/3
+  C2    <- zpl1/3
 
-  zpu1 <- qnorm(p = .p1/2, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
-  zpl1 <- qnorm(p = .p1/2, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
-  C1   <- zpu1/3
-  C2   <- zpl1/3
-
-  zp1  <- qnorm(p = .p1/2, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
-  zp2  <- qnorm(p = .p2/2, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
+  zp11  <- qnorm(p = 3*.p1/4, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
+  zp12  <- qnorm(p =   .p1/4, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
+  zp21  <- qnorm(p = 3*.p2/4, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
+  zp22  <- qnorm(p =   .p2/4, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
 
   Out0 <- tibble::tibble()
   for (i in 1:.rep){
@@ -95,28 +97,27 @@ rgsp_sym.default <- function(.p1, .p2, .alpha, .beta, .nums, .rep){
       , ka     = runif(n = .nums, min =  0, max = min(C1, C2))
       , kr     = runif(n = .nums, min =  0, max = ka)
       , n      = sample(x = 2:500, size = .nums, replace = TRUE)
+      , N1     = pnorm(q =  (zp11 - 3*ka)*sqrt(n/(1+(9*(ka^2))/2)), mean = 0, sd = 1) -
+                 pnorm(q =- (zp12 - 3*ka)*sqrt(n/(1+(9*(ka^2))/2)), mean = 0, sd = 1)
+      , D1     = N1 + 1 - pnorm(q =  (zp11 - 3*kr)*sqrt(n/(1+(9*(kr^2))/2)), mean = 0, sd = 1) +
+                         pnorm(q = -(zp12 - 3*kr)*sqrt(n/(1+(9*(kr^2))/2)), mean = 0, sd = 1)
+      , LP1    = N1/D1
 
-      , LP1    = (2*pnorm(q = (zp1-3*ka)*sqrt(n/(1+(9*(ka^2))/2)), mean = 0, sd = 1) - 1)/
-                 (2*pnorm(q = (zp1-3*ka)*sqrt(n/(1+(9*(ka^2))/2)), mean = 0, sd = 1) -
-                  2*pnorm(q = (zp1-3*kr)*sqrt(n/(1+(9*(kr^2))/2)), mean = 0, sd = 1) + 1)
+      , N2     = pnorm(q =  (zp21 - 3*ka)*sqrt(n/(1+(9*(ka^2))/2)), mean = 0, sd = 1) -
+                 pnorm(q =- (zp22 - 3*ka)*sqrt(n/(1+(9*(ka^2))/2)), mean = 0, sd = 1)
 
-      , LP2    = (2*pnorm(q = (zp2-3*ka)*sqrt(n/(1+(9*(ka^2))/2)), mean = 0, sd = 1) - 1)/
-                 (2*pnorm(q = (zp2-3*ka)*sqrt(n/(1+(9*(ka^2))/2)), mean = 0, sd = 1) -
-                  2*pnorm(q = (zp2-3*kr)*sqrt(n/(1+(9*(kr^2))/2)), mean = 0, sd = 1) + 1)
+      , D2     = N2 + 1 - pnorm(q =  (zp21 - 3*kr)*sqrt(n/(1+(9*(kr^2))/2)), mean = 0, sd = 1) +
+                         pnorm(q = -(zp22 - 3*kr)*sqrt(n/(1+(9*(kr^2))/2)), mean = 0, sd = 1)
+      , LP2    = N2/D2
 
-      , r2      = 1/
-                    (2*pnorm(q = (zp2-3*ka)*sqrt(n/(1+(9*(ka^2))/2)), mean = 0, sd = 1) -
-                     2*pnorm(q = (zp2-3*kr)*sqrt(n/(1+(9*(kr^2))/2)), mean = 0, sd = 1) + 1)
+      , ASN2    = n/D2
+        ) %>%
 
-      , ASN2    = n/(2*pnorm(q = (zp2-3*ka)*sqrt(n/(1+(9*(ka^2))/2)), mean = 0, sd = 1)-
-                     2*pnorm(q = (zp2-3*kr)*sqrt(n/(1+(9*(kr^2))/2)), mean = 0, sd = 1) + 1)
-    ) %>%
-
-      dplyr::filter(LP1 >= (1-.alpha), LP2 <= .beta, r2 <= 3) %>%
+      dplyr::filter(LP1 >= (1-.alpha), LP2 <= .beta, ka <= 1) %>%
       dplyr::filter(ASN2 == min(ASN2)) %>%
       dplyr::select(p1, p2, n, ka,  kr, ASN = ASN2)
 
-    Out0 <- rbind(Out0, Out1)
+     Out0 <- rbind(Out0, Out1)
     }
   Out <-
     Out0 %>%

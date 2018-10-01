@@ -6,7 +6,7 @@
 \alias{rgsp-package}
 \title{Repetitive Group Sampling Plan Based on Cpk}
 \description{
-The \code{asn} package provides functionalities to calculate
+The \code{rgsp} package provides functionalities to calculate
 Sample Number and Average Sample Number for a
 Repetitive Group Sampling Plan based on Cpk as given in
 Aslam et al. (2013).
