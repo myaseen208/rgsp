@@ -38,10 +38,10 @@
 #' @examples
 #'
 #' rgsp_asym2(
-#'     .p1     = 0.01
-#'   , .p2     = 0.04
-#'   , .alpha  = 0.05
-#'   , .beta   = 0.10
+#'     .p1     = 0.001
+#'   , .p2     = 0.003
+#'   , .alpha  = 0.050
+#'   , .beta   = 0.100
 #'   , .nums   = 10000
 #'   , .rep    = 10 # 1000
 #' )
@@ -85,32 +85,32 @@ rgsp_asym2 <- function(.p1, .p2, .alpha, .beta, .nums, .rep){
 
 rgsp_asym2.default <- function(.p1, .p2, .alpha, .beta, .nums, .rep){
 
-  zpu1  <- qnorm(p =   .p1/3, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
-  zpl1  <- qnorm(p = 2*.p1/3, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
-  C1    <- zpu1/3
-  C2    <- zpl1/3
+  zpl1  <- qnorm(p =   .p1/3, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
+  zpu1  <- qnorm(p = 2*.p1/3, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
+  C1    <- zpl1/3
+  C2    <- zpu1/3
 
   zp11  <- qnorm(p =   .p1/3, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
-  zp12  <- qnorm(p = 2*.p1/4, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
-  zp21  <- qnorm(p =   .p2/4, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
-  zp22  <- qnorm(p = 2*.p2/4, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
+  zp12  <- qnorm(p = 2*.p1/3, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
+  zp21  <- qnorm(p =   .p2/3, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
+  zp22  <- qnorm(p = 2*.p2/3, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
 
   Out0 <- tibble::tibble()
   for (i in 1:.rep){
     Out1  <- tibble::tibble(
-      p1     = .p1
+        p1     = .p1
       , p2     = .p2
       , ka     = runif(n = .nums, min =  0, max = min(C1,C2))
       , kr     = runif(n = .nums, min =  0, max = ka)
       , n      = sample(x = 2:500, size = .nums, replace = TRUE)
       , N1     = pnorm(q =  (zp11 - 3*ka)*sqrt(n/(1+(9*(ka^2))/2)), mean = 0, sd = 1) -
-                 pnorm(q =- (zp12 - 3*ka)*sqrt(n/(1+(9*(ka^2))/2)), mean = 0, sd = 1)
+                 pnorm(q = -(zp12 - 3*ka)*sqrt(n/(1+(9*(ka^2))/2)), mean = 0, sd = 1)
       , D1     = N1+ 1 - pnorm(q =  (zp11 - 3*kr)*sqrt(n/(1+(9*(kr^2))/2)), mean = 0, sd = 1) +
                          pnorm(q = -(zp12 - 3*kr)*sqrt(n/(1+(9*(kr^2))/2)), mean = 0, sd = 1)
       , LP1    = N1/D1
 
       , N2     = pnorm(q =  (zp21 - 3*ka)*sqrt(n/(1+(9*(ka^2))/2)), mean = 0, sd = 1) -
-                 pnorm(q =- (zp22 - 3*ka)*sqrt(n/(1+(9*(ka^2))/2)), mean = 0, sd = 1)
+                 pnorm(q = -(zp22 - 3*ka)*sqrt(n/(1+(9*(ka^2))/2)), mean = 0, sd = 1)
 
       , D2     = N2+ 1 - pnorm(q =  (zp21 - 3*kr)*sqrt(n/(1+(9*(kr^2))/2)), mean = 0, sd = 1) +
                          pnorm(q = -(zp22 - 3*kr)*sqrt(n/(1+(9*(kr^2))/2)), mean = 0, sd = 1)

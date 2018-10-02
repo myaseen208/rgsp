@@ -29,10 +29,10 @@ Calculates Sample Number and Average Sample Number for Repetitive Group Sampling
 \examples{
 
 rgsp_asym1(
-    .p1     = 0.01
-  , .p2     = 0.04
-  , .alpha  = 0.05
-  , .beta   = 0.10
+    .p1     = 0.001
+  , .p2     = 0.003
+  , .alpha  = 0.050
+  , .beta   = 0.100
   , .nums   = 10000
   , .rep    = 10 # 1000
 )

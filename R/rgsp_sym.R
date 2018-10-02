@@ -79,10 +79,10 @@ rgsp_sym <- function(.p1, .p2, .alpha, .beta, .nums, .rep){
 
 rgsp_sym.default <- function(.p1, .p2, .alpha, .beta, .nums, .rep){
 
-  zpu1 <- qnorm(p = .p1/2, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
   zpl1 <- qnorm(p = .p1/2, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
-  C1   <- zpu1/3
-  C2   <- zpl1/3
+  zpu1 <- qnorm(p = .p1/2, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
+  C1   <- zpl1/3
+  C2   <- zpu1/3
 
   zp1  <- qnorm(p = .p1/2, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
   zp2  <- qnorm(p = .p2/2, mean = 0, sd = 1, lower.tail = FALSE, log.p = FALSE)
