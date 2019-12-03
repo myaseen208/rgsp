@@ -117,15 +117,18 @@ Minimizing conditions for $L(p_1)$ and $L(p_2)$ for both symmetric and asymmetri
 ``rgsp`` is an R package containing functions to compute the above mentioned procedures for different sample size and different size of the shifts. The package contains following functions for the above mentioned methods
 
 
-```{r eval = FALSE}
+
+```r
 rgsp_asym1(.p1, .p2, .alpha, .beta, .nums, .rep)
 ```
 
-```{r eval = FALSE}
+
+```r
 rgsp_asym2(.p1, .p2, .alpha, .beta, .nums, .rep)
 ```
 
-```{r eval = FALSE}
+
+```r
 rgsp_sym(.p1, .p2, .alpha, .beta, .nums, .rep)
 ```
 
