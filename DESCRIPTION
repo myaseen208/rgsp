@@ -13,7 +13,7 @@ Author: Muhammad Yaseen [aut, cre],
         Sami Ullah [aut, ctb],
         Muhammad Kashif [aut, ctb]
 Maintainer: Muhammad Yaseen <myaseen208@gmail.com>
-Description: Functions to calculate Sample Number and Average Sample Number for Repetitive Group Sampling Plan Based on Cpk as given in Aslam et al. (2013) (<DOI:10.1080/00949655.2012.663374>).
+Description: Functions to calculate Sample Number and Average Sample Number for Repetitive Group Sampling Plan Based on Cpk as given in Aslam et al. (2012) (<DOI:10.1080/00949655.2012.663374>).
 Depends: R (>= 3.1)
 Imports: 
   dplyr,
